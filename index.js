@@ -1,10 +1,15 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-app.get('/test', function (req, res) {
-    console.log(req.params);
-    return res.send('Start...');
-});
+const { PatientController } = require('./controllers');
+
+app.use(bodyParser.json());
+app.use(cors());
+
+app.get('/patients', PatientController.all);
+app.post('/patients', PatientController.create);
 
 app.listen(5000, function (err) {
     if (err) {

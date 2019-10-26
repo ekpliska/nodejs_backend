@@ -4,14 +4,14 @@ const { Schema } = mongoose;
 const AppointmentShema = new Schema(
     {
         id: String,
-        user_id: {
-            type: Schema.Types.ObjectId, ref: 'Patient'
-        },
-        teeth_number: Number,
+        teethNumber: Number,
         diagnosis: String,
         price: Number,
         date: String,
         time: String,
+        patient: {
+            type: Schema.Types.ObjectId, ref: 'Patient'
+        },
     },
     {
         timestamps: true

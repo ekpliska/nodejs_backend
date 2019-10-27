@@ -7,7 +7,7 @@ const vaidation = {
         check('price').isDecimal(),
         check('date').isLength({ min: 3, max: 20 }),
         check('time').isLength({ min: 5, max: 5 }),
-        check('patient').isLength({ min: 12, max: 12 }),
+        check('patient').isLength({ max: 100 }),
     ]
 };
 

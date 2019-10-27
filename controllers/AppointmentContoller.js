@@ -1,4 +1,4 @@
-const { Appointment } = require('../models');
+const { Appointment, Patient } = require('../models');
 const { validationResult } = require('express-validator');
 
 function AppointmentContoller() {
@@ -23,7 +23,7 @@ const all = function (req, res) {
         })
 }
 
-const create = function (req, res) {
+const create = async function (req, res) {
     const data = {
         teethNumber: req.body.teethNumber,
         diagnosis: req.body.diagnosis,
@@ -38,6 +38,15 @@ const create = function (req, res) {
         return res.status(422).json({
             success: false,
             message: errors.array()
+        });
+    }
+
+    try {
+        patient = await Patient.findOne({ _id: data.patient });
+    } catch (e) {
+        return res.status(404).json({
+            success: false,
+            message: 'PATIENT_NOT_FOUND',
         });
     }
 
@@ -56,9 +65,24 @@ const create = function (req, res) {
     })
 }
 
+const remove = function(req, res) {
+    const id = req.params.id;
+    Appointment.deleteOne({ _id: id }, (err) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: err,
+            });
+        }
+
+        res.json({ success: true });
+    });
+}
+
 AppointmentContoller.prototype = {
     all,
     create,
+    remove,
 }
 
 module.exports = AppointmentContoller;

@@ -65,8 +65,18 @@ const create = async function (req, res) {
     })
 }
 
-const remove = function(req, res) {
+const remove = async function(req, res) {
     const id = req.params.id;
+
+    try {
+        await Appointment.findOne({ _id: id });
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: 'Appointment not found',
+        })
+    }
+
     Appointment.deleteOne({ _id: id }, (err) => {
         if (err) {
             return res.status(500).json({

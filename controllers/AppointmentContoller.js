@@ -42,7 +42,7 @@ const create = async function (req, res) {
     }
 
     try {
-        patient = await Patient.findOne({ _id: data.patient });
+        await Patient.findOne({ _id: data.patient });
     } catch (e) {
         return res.status(404).json({
             success: false,
@@ -62,6 +62,49 @@ const create = async function (req, res) {
             success: true,
             data: doc,
         })
+    })
+}
+
+const update = async function (req, res) {
+    const appointmentId = req.params.id;
+    const errors = validationResult(req);
+    const data = {
+        teethNumber: req.body.teethNumber,
+        diagnosis: req.body.diagnosis,
+        price: req.body.price,
+        date: req.body.date,
+        time: req.body.time,
+    };
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({
+            success: false,
+            message: errors.array(),
+        });
+    }
+
+    Appointment.updateOne(
+        { _id: appointmentId },
+        { $set: data },
+        function (err, doc) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+
+            if (!doc) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Appointment not forund',
+                })
+            }
+
+            res.status(200).json({
+                success: true,
+                data: doc,
+            });
     })
 }
 
@@ -92,6 +135,7 @@ const remove = async function(req, res) {
 AppointmentContoller.prototype = {
     all,
     create,
+    update,
     remove,
 }
 

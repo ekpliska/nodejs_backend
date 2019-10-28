@@ -13,10 +13,14 @@ app.use(cors());
 
 app.get('/patients', PatientCtrt.all);
 app.post('/patients', patientValidators.create, PatientCtrt.create);
+app.get('/patients/:id', PatientCtrt.show);
+app.patch('/patients/:id', patientValidators.create, PatientCtrt.update);
+app.delete('/patients/:id', PatientCtrt.remove);
 
 app.get('/appointments', AppointmentCtrt.all);
 app.post('/appointments', appointmentValidators.create, AppointmentCtrt.create);
-app.delete('/appointments/:id', appointmentValidators.create, AppointmentCtrt.remove);
+app.patch('/appointments/:id', appointmentValidators.update, AppointmentCtrt.update);
+app.delete('/appointments/:id', AppointmentCtrt.remove);
 
 app.listen(5000, function (err) {
     if (err) {

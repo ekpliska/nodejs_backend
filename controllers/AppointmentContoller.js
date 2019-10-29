@@ -1,5 +1,6 @@
 const { Appointment, Patient } = require('../models');
 const { validationResult } = require('express-validator');
+const { groupBy, reduce } = require('lodash');
 
 function AppointmentContoller() {
 
@@ -16,11 +17,19 @@ const all = function (req, res) {
                     message: err
                 })
             }
+
+            const group = groupBy(docs, 'date');
+
             res.json({
                 success: true,
-                data: docs
+                data: reduce(
+                    group,
+                    (result, value, key) => {
+                        result = [...result, { title: key, data: value }];
+                        return result;
+                    }, [])
             });
-        })
+        });
 }
 
 const create = async function (req, res) {

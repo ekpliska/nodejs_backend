@@ -118,18 +118,21 @@ const remove = async function (req, res) {
 const show = async function (req, res) {
     const id = req.params.id;
     try {
-        const data = await Patient.findById(id).exec();
+        const patient = await Patient.findById(id)
+            .populate('appointments')
+            .exec();
+
         res.status(200).json({
-            success: true,
-            message: data
-        })
-    } catch (error) {
-        res.status(404).json({
+            status: 'succces',
+            data: { ...patient._doc, appointments: patient.appointments }
+        });
+    } catch (e) {
+        return res.status(404).json({
             success: false,
-            message: 'Patient not found',
+            message: 'Patient not found'
         });
     }
-}
+};
 
 PatientController.prototype = {
     all,
